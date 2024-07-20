@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
 import javax.persistence.Column;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
@@ -18,8 +19,8 @@ public class ProductRequest {
     @NotEmpty
     @Size(max = 150)
     private String productName;
-    @NotEmpty
+    @Min(0)
     private Long price;
-
+    @Min(0)
     private long quantity;
 }

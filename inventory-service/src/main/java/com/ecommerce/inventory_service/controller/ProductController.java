@@ -34,7 +34,7 @@ public class ProductController {
     }
 
     @PutMapping(path = "/{productId}/deduction", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<BaseResponse> deductionProductQuantity(@Valid @RequestBody UpdateProductRequest productRequest,@PathVariable long productId) {
+    public ResponseEntity<BaseResponse> deductionProductQuantity(@Valid @RequestBody UpdateProductRequest productRequest, @PathVariable long productId) {
 
         //set updateType to DEDUCTION
         productRequest.setUpdateType("DEDUCTION");
@@ -43,7 +43,7 @@ public class ProductController {
     }
 
     @PutMapping(path = "/{productId}/addition", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<BaseResponse> additionProductQuantity(@Valid @RequestBody UpdateProductRequest productRequest,@PathVariable long productId) {
+    public ResponseEntity<BaseResponse> additionProductQuantity(@Valid @RequestBody UpdateProductRequest productRequest, @PathVariable long productId) {
 
         //set updateType to ADDITION
         productRequest.setUpdateType("ADDITION");

@@ -14,6 +14,7 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 @ToString
 @Entity
+@Builder
 public class Product {
     @Id
     @Column(name = "ID")
@@ -29,6 +30,7 @@ public class Product {
 
     @JsonIgnore
     @Column(name = "VERSION")
+    @Version
     private long version;
     @JsonIgnore
     @Column(name = "CREATED_BY")
