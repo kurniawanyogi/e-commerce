@@ -1,5 +1,6 @@
 package com.ecommerce.inventory_service.service.Impl;
 
+import com.ecommerce.inventory_service.common.constant.constant;
 import com.ecommerce.inventory_service.common.exception.MainException;
 import com.ecommerce.inventory_service.entity.Product;
 import com.ecommerce.inventory_service.model.ProductRequest;
@@ -26,7 +27,7 @@ public class ProductServiceImpl implements ProductService {
     public Product createProduct(ProductRequest productRequest, String username) {
         Optional<Product> existingProduct = productRepository.findByProductName(productRequest.getProductName());
         if (existingProduct.isPresent())
-            throw new MainException("400-VALIDATION",
+            throw new MainException(constant.CODE_VALIDATION,
                     String.format("product dengan nama %s sudah pernah tersimpan", productRequest.getProductName()));
 
         return saveProduct(productRequest, username);
@@ -37,7 +38,7 @@ public class ProductServiceImpl implements ProductService {
     public Product updateProductQuantity(Long productId, UpdateProductRequest productRequest, String username) {
         Optional<Product> existingProduct = productRepository.findById(productId);
         if (!existingProduct.isPresent())
-            throw new MainException("400-VALIDATION", "product tidak ditemukan");
+            throw new MainException(constant.CODE_VALIDATION, "product tidak ditemukan");
 
         return updateProduct(existingProduct.get(), productRequest, username);
     }
@@ -46,7 +47,7 @@ public class ProductServiceImpl implements ProductService {
     public Long checkProductQuantity(Long productId) {
         Optional<Product> existingProduct = productRepository.findById(productId);
         if (!existingProduct.isPresent())
-            throw new MainException("400-VALIDATION", "product tidak ditemukan");
+            throw new MainException(constant.CODE_VALIDATION, "product tidak ditemukan");
         return existingProduct.get().getQuantity();
     }
 
@@ -66,14 +67,15 @@ public class ProductServiceImpl implements ProductService {
 
     private Product updateProduct(Product existingProduct, UpdateProductRequest request, String username) {
         long quantity;
-        if ("DEDUCTION".equals(request.getUpdateType())) {
+        //update quantity based from updateType
+        if (constant.DEDUCTION.equals(request.getUpdateType())) {
             quantity = existingProduct.getQuantity() - request.getQuantity();
             if (quantity < 0)
-                throw new MainException("400-VALIDATION", "quantity akhir product tidak boleh minus");
-        } else if ("ADDITION".equals(request.getUpdateType())) {
+                throw new MainException(constant.CODE_VALIDATION, "quantity akhir product tidak boleh minus");
+        } else if (constant.ADDITION.equals(request.getUpdateType())) {
             quantity = existingProduct.getQuantity() + request.getQuantity();
         } else {
-            throw new MainException("400-VALIDATION", "updateType tidak valid");
+            throw new MainException(constant.CODE_VALIDATION, "updateType tidak valid");
         }
         existingProduct.setQuantity(quantity);
         existingProduct.setLastUpdatedBy(username);

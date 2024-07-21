@@ -1,6 +1,7 @@
 package com.ecommerce.inventory_service.common.advise;
 
 
+import com.ecommerce.inventory_service.common.constant.constant;
 import com.ecommerce.inventory_service.common.exception.MainException;
 import com.ecommerce.inventory_service.common.model.BaseResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -36,7 +37,7 @@ public class MainExceptionHandler {
     @ExceptionHandler(ServletRequestBindingException.class)
     @ResponseStatus(code = HttpStatus.BAD_REQUEST)
     public ResponseEntity<BaseResponse> servletRequestBindingException(ServletRequestBindingException exception) {
-        BaseResponse response = new BaseResponse("400-VALIDATION", exception.getMessage(), null);
+        BaseResponse response = new BaseResponse(constant.CODE_VALIDATION, exception.getMessage(), null);
         log.warn(String.format("validation code : %s , message : %s ", response.getCode(), response.getDescription()));
 
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
@@ -52,8 +53,8 @@ public class MainExceptionHandler {
             errors.put(fieldName, errorMessage);
         });
 
-        log.warn(String.format("400-VALIDATION : %s ", errors));
+        log.warn(String.format("%s : %s ", constant.CODE_VALIDATION,errors));
 
-        return new ResponseEntity<>(new BaseResponse("400-VALIDATION", null, errors), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new BaseResponse(constant.CODE_VALIDATION, null, errors), HttpStatus.BAD_REQUEST);
     }
 }
