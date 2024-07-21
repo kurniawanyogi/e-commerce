@@ -30,7 +30,7 @@ public class ProductController {
     public ResponseEntity<BaseResponse> getProductQuantity(@PathVariable long productId) {
         long response = productService.checkProductQuantity(productId);
 
-        return ResponseEntity.ok(new BaseResponse(HttpStatus.CREATED.toString(), "Get Product Quantity Success", response));
+        return ResponseEntity.ok(new BaseResponse(HttpStatus.OK.toString(), "Get Product Quantity Success", response));
     }
 
     @PutMapping(path = "/{productId}/deduction", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -39,7 +39,7 @@ public class ProductController {
         //set updateType to DEDUCTION
         productRequest.setUpdateType("DEDUCTION");
         Product response = productService.updateProductQuantity(productId, productRequest, "SYSTEM");
-        return ResponseEntity.ok(new BaseResponse(HttpStatus.CREATED.toString(), "Update Product Success", response));
+        return ResponseEntity.ok(new BaseResponse(HttpStatus.OK.toString(), "Update Product Success", response));
     }
 
     @PutMapping(path = "/{productId}/addition", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -48,6 +48,6 @@ public class ProductController {
         //set updateType to ADDITION
         productRequest.setUpdateType("ADDITION");
         Product response = productService.updateProductQuantity(productId, productRequest, "SYSTEM");
-        return ResponseEntity.ok(new BaseResponse(HttpStatus.CREATED.toString(), "Update Product Success", response));
+        return ResponseEntity.ok(new BaseResponse(HttpStatus.OK.toString(), "Update Product Success", response));
     }
 }
