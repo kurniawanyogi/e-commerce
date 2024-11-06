@@ -1,6 +1,7 @@
 package com.ecommerce.inventory_service.service;
 
 
+import com.ecommerce.inventory_service.common.constant.constant;
 import com.ecommerce.inventory_service.common.exception.MainException;
 import com.ecommerce.inventory_service.entity.Product;
 import com.ecommerce.inventory_service.model.ProductRequest;
@@ -43,12 +44,12 @@ public class ProductServiceTest {
                 .quantity(10)
                 .build();
         when(productRepository.findByProductName(request.getProductName())).thenReturn(Optional.empty());
-        Product response = productService.createProduct(request, "SYSTEM");
+        Product response = productService.createProduct(request, constant.SYSTEM);
 
         assertEquals(request.getProductName(), response.getProductName());
         assertEquals(request.getQuantity(), response.getQuantity());
         assertEquals(request.getPrice(), response.getPrice());
-        assertEquals("SYSTEM", response.getCreatedBy());
+        assertEquals(constant.SYSTEM, response.getCreatedBy());
     }
 
     @Test
@@ -61,9 +62,9 @@ public class ProductServiceTest {
         when(productRepository.findByProductName(request.getProductName()))
                 .thenReturn(Optional.of(Product.builder().productName("product test").build()));
         try {
-            productService.createProduct(request, "SYSTEM");
+            productService.createProduct(request, constant.SYSTEM);
         } catch (MainException expected) {
-            assertEquals("400-VALIDATION", expected.getCode());
+            assertEquals(constant.CODE_VALIDATION, expected.getCode());
             assertEquals("product dengan nama product test sudah pernah tersimpan", expected.getMessage());
         }
     }
@@ -72,7 +73,7 @@ public class ProductServiceTest {
     void updateProductQuantity_withValidDeductionRequest_shouldUpdateQuantity() {
         UpdateProductRequest request = UpdateProductRequest.builder()
                 .quantity(1)
-                .updateType("DEDUCTION")
+                .updateType(constant.DEDUCTION)
                 .build();
         long productId = 1;
         when(productRepository.findById(productId))
@@ -81,7 +82,7 @@ public class ProductServiceTest {
                         .productName("test product")
                         .quantity(10)
                         .build()));
-        Product response = productService.updateProductQuantity(productId, request, "SYSTEM");
+        Product response = productService.updateProductQuantity(productId, request, constant.SYSTEM);
 
         assertEquals(10 - 1, response.getQuantity());
     }
@@ -90,7 +91,7 @@ public class ProductServiceTest {
     void updateProductQuantity_withQuantityRequestMoreThanActualQuantity_shouldReturnException() {
         UpdateProductRequest request = UpdateProductRequest.builder()
                 .quantity(11)
-                .updateType("DEDUCTION")
+                .updateType(constant.DEDUCTION)
                 .build();
         long productId = 1;
         when(productRepository.findById(productId))
@@ -100,9 +101,9 @@ public class ProductServiceTest {
                         .quantity(10)
                         .build()));
         try {
-            productService.updateProductQuantity(productId, request, "SYSTEM");
+            productService.updateProductQuantity(productId, request, constant.SYSTEM);
         } catch (MainException expected) {
-            assertEquals("400-VALIDATION", expected.getCode());
+            assertEquals(constant.CODE_VALIDATION, expected.getCode());
             assertEquals("quantity akhir product tidak boleh minus", expected.getMessage());
         }
     }
@@ -111,7 +112,7 @@ public class ProductServiceTest {
     void updateProductQuantity_withValidAdditionRequest_shouldUpdateQuantity() {
         UpdateProductRequest request = UpdateProductRequest.builder()
                 .quantity(1)
-                .updateType("ADDITION")
+                .updateType(constant.ADDITION)
                 .build();
         long productId = 1;
         when(productRepository.findById(productId))
@@ -120,7 +121,7 @@ public class ProductServiceTest {
                         .productName("test product")
                         .quantity(10)
                         .build()));
-        Product response = productService.updateProductQuantity(productId, request, "SYSTEM");
+        Product response = productService.updateProductQuantity(productId, request, constant.SYSTEM);
 
         assertEquals(10 + 1, response.getQuantity());
     }
@@ -150,7 +151,7 @@ public class ProductServiceTest {
         try {
             productService.checkProductQuantity(productId);
         } catch (MainException expected) {
-            assertEquals("400-VALIDATION", expected.getCode());
+            assertEquals(constant.CODE_VALIDATION, expected.getCode());
             assertEquals("product tidak ditemukan", expected.getMessage());
         }
     }

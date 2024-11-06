@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import static com.ecommerce.inventory_service.common.constant.constant.*;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/products")
@@ -22,7 +24,7 @@ public class ProductController {
 
     @PostMapping(path = "/create", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<BaseResponse> createProduct(@Valid @RequestBody ProductRequest productRequest) {
-        Product response = productService.createProduct(productRequest, "SYSTEM");
+        Product response = productService.createProduct(productRequest, SYSTEM);
         return ResponseEntity.ok(new BaseResponse(HttpStatus.CREATED.toString(), "Create Product Success", response));
     }
 
@@ -37,8 +39,8 @@ public class ProductController {
     public ResponseEntity<BaseResponse> deductionProductQuantity(@Valid @RequestBody UpdateProductRequest productRequest, @PathVariable long productId) {
 
         //set updateType to DEDUCTION
-        productRequest.setUpdateType("DEDUCTION");
-        Product response = productService.updateProductQuantity(productId, productRequest, "SYSTEM");
+        productRequest.setUpdateType(DEDUCTION);
+        Product response = productService.updateProductQuantity(productId, productRequest, SYSTEM);
         return ResponseEntity.ok(new BaseResponse(HttpStatus.OK.toString(), "Update Product Success", response));
     }
 
@@ -46,8 +48,8 @@ public class ProductController {
     public ResponseEntity<BaseResponse> additionProductQuantity(@Valid @RequestBody UpdateProductRequest productRequest, @PathVariable long productId) {
 
         //set updateType to ADDITION
-        productRequest.setUpdateType("ADDITION");
-        Product response = productService.updateProductQuantity(productId, productRequest, "SYSTEM");
+        productRequest.setUpdateType(ADDITION);
+        Product response = productService.updateProductQuantity(productId, productRequest, SYSTEM);
         return ResponseEntity.ok(new BaseResponse(HttpStatus.OK.toString(), "Update Product Success", response));
     }
 }
