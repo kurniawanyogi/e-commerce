@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="1_0_0_0_1_CREATE_TABLE_USER" author="YOGI">
+        <createTable tableName="USER">
+            <column name="ID" type="VARCHAR(20)">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="USERNAME" type="VARCHAR(30)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="PASSWORD" type="VARCHAR(100)"/>
+            <column name="FIRST_NAME" type="VARCHAR(50)"/>
+            <column name="LAST_NAME" type="VARCHAR(50)"/>
+
+            <column name="STATUS" type="CHAR(1)" defaultValue="A">
+                <constraints nullable="false"/>
+            </column>
+            <column name="VERSION" type="BIGINT(20)" defaultValue="0"/>
+            <column name="CREATED_BY" type="VARCHAR(50)"/>
+            <column name="LAST_UPDATED_BY" type="VARCHAR(50)"/>
+            <column name="CREATED_DATE" type="DATETIME"/>
+            <column name="LAST_UPDATED_DATE" type="DATETIME"/>
+
+        </createTable>
+    </changeSet>
+
+    <changeSet id="1_0_0_0_2_CREATE_TABLE_ROLE" author="YOGI">
+        <createTable tableName="ROLE">
+            <column name="ID" type="INT(11)">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="ROLE_NAME" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="1_0_0_0_3_CREATE_TABLE_USER_ROLE" author="YOGI">
+        <createTable tableName="USER_ROLE">
+            <column name="USER_ID" type="VARCHAR(20)">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="ROLE_ID" type="INT(11)">
+                <constraints primaryKey="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="1_0_0_0_4_INSERT_DATA_TABLE_ROLE" author="YOGI">
+        <sql>
+            <![CDATA[
+            INSERT INTO ROLE
+            VALUES (1, 'ADMIN'),
+                   (2, 'SELLER'),
+                   (3, 'BUYER');
+            ]]>
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>
