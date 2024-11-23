@@ -10,3 +10,6 @@ spring:
 
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
+
+external-service:
+  auth-service-url: http://localhost:8889/auth
