@@ -1,5 +1,6 @@
 package com.ecommerve.order_service.controller;
 
+import com.ecommerve.order_service.common.constant.Constant;
 import com.ecommerve.order_service.common.model.BaseResponse;
 import com.ecommerve.order_service.model.OrderRequest;
 import com.ecommerve.order_service.service.OrderService;
@@ -19,7 +20,7 @@ public class OrderController {
 
     @PostMapping(path = "/{productId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<BaseResponse> createProduct(@Valid @RequestBody OrderRequest orderRequest, @PathVariable long productId) {
-        orderService.orderProduct(productId, orderRequest, "SYSTEM");
+        orderService.orderProduct(productId, orderRequest, Constant.SYSTEM);
         return ResponseEntity.ok(new BaseResponse(HttpStatus.OK.toString(), "Success Order Product", null));
     }
 }

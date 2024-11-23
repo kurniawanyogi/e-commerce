@@ -1,5 +1,6 @@
 package com.eccomerce.auth_service.security.controller;
 
+import com.eccomerce.auth_service.common.constant.Constant;
 import com.eccomerce.auth_service.entity.User;
 import com.eccomerce.auth_service.exception.MainException;
 import com.eccomerce.auth_service.model.ChangePasswordRequest;
@@ -38,7 +39,6 @@ public class AuthenticationController {
     private final UserDetailServiceImpl userDetailsService;
     private final TokenUtil tokenUtil;
     private final UserService userService;
-    private static final String HEADER_PERMISSION = "permission";
 
 
     public Authentication getCurrentUser() {
@@ -61,8 +61,11 @@ public class AuthenticationController {
     }
 
     @GetMapping(path = "/authorize", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<BaseResponse> detailCurrentUser(HttpServletRequest request) {
-        String permissionRole = request.getHeader(HEADER_PERMISSION);
+    public ResponseEntity<BaseResponse> authorize(HttpServletRequest request) {
+        String permissionRole = request.getHeader(Constant.PERMISSION);
+        if (permissionRole == null) {
+            throw new MainException(HttpStatus.UNAUTHORIZED.toString(), "Permission required");
+        }
         SimpleGrantedAuthority role = new SimpleGrantedAuthority("ROLE_" + permissionRole);
         if (!getCurrentUser().getAuthorities().contains(role)) {
             throw new MainException(HttpStatus.FORBIDDEN.toString(), "FORBIDDEN ACCESS");

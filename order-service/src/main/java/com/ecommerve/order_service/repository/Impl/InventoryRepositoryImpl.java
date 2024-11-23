@@ -5,6 +5,7 @@ import com.ecommerve.order_service.common.model.BaseResponse;
 import com.ecommerve.order_service.model.OrderRequest;
 import com.ecommerve.order_service.repository.InventoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -15,6 +16,8 @@ import reactor.core.publisher.Mono;
 @Repository
 public class InventoryRepositoryImpl implements InventoryRepository {
     private final WebClient webClient;
+    @Value("${external-service.inventory-service-url}")
+    private String inventoryServiceUrl;
 
     @Autowired
     public InventoryRepositoryImpl(WebClient.Builder webClientBuilder) {
@@ -23,7 +26,7 @@ public class InventoryRepositoryImpl implements InventoryRepository {
 
     public Mono<BaseResponse> getProductQuantityByProductId(long productId) {
         return webClient.get()
-                .uri(String.format("http://localhost:8080/products/%d",productId))
+                .uri(inventoryServiceUrl + String.format("/%d",productId))
                 .retrieve()
                 .onStatus(httpStatus -> !httpStatus.is2xxSuccessful(),
                         clientResponse -> clientResponse.bodyToMono(BaseResponse.class)
@@ -33,7 +36,7 @@ public class InventoryRepositoryImpl implements InventoryRepository {
 
     public Mono<BaseResponse> deductionProductQuantity(long productId, OrderRequest request) {
         return webClient.put()
-                .uri(String.format("http://localhost:8080/products/%d/deduction", productId))
+                .uri(inventoryServiceUrl + String.format("/%d/deduction", productId))
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .body(Mono.just(request), OrderRequest.class)
                 .retrieve()

@@ -3,3 +3,5 @@ spring:
     name: order-service
 server:
   port: 8888
+external-service:
+  inventory-service-url: http://localhost:8080/products

@@ -1,15 +1,14 @@
 package com.eccomerce.auth_service.security.filter;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.eccomerce.auth_service.common.constant.Constant;
 import com.eccomerce.auth_service.response.BaseResponse;
 import com.eccomerce.auth_service.security.entity.Authentication;
 import com.eccomerce.auth_service.security.service.UserDetailServiceImpl;
 import com.eccomerce.auth_service.security.util.TokenUtil;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
@@ -24,8 +23,6 @@ import java.io.IOException;
 @Component
 @Slf4j
 public class TokenAuthenticationFilter extends OncePerRequestFilter {
-    private static final String TOKEN = "TOKEN";
-
     @Autowired
     private UserDetailServiceImpl userDetailService;
 
@@ -34,12 +31,11 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String token = request.getHeader(TOKEN);
+        String token = request.getHeader(Constant.TOKEN);
 
         if (token != null) {
             String username = tokenUtil.getUsernameFromToken(token);
             if (username == null) {
-                log.error("auth failed");
                 unAuthorizeResponse(response);
                 return;
             }
@@ -49,7 +45,11 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             } else {
-                log.error("auth failed");
+                unAuthorizeResponse(response);
+                return;
+            }
+        } else {
+            if (!request.getRequestURI().contains("/login")) {
                 unAuthorizeResponse(response);
                 return;
             }
@@ -69,6 +69,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
         response.setHeader("Content-Type", "application/json");
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.getOutputStream().write(responseToSend);
+        log.error("auth failed");
     }
 
     private void forbiddenResponse(HttpServletResponse response) throws IOException {
