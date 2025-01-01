@@ -16,7 +16,7 @@ import reactor.core.publisher.Mono;
 @Repository
 public class InventoryRepositoryImpl implements InventoryRepository {
     private final WebClient webClient;
-    @Value("${external-service.inventory-service-url}")
+    @Value("${external-service.inventory-service-url:http://localhost:8080/products}")
     private String inventoryServiceUrl;
 
     @Autowired
@@ -35,9 +35,11 @@ public class InventoryRepositoryImpl implements InventoryRepository {
     }
 
     public Mono<BaseResponse> deductionProductQuantity(long productId, OrderRequest request) {
+        //TODO remove hardcode when RBAC on buyer already implemented
         return webClient.put()
                 .uri(inventoryServiceUrl + String.format("/%d/deduction", productId))
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .header("TOKEN", "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjAxIiwicm9sZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3MzU3OTk5ODR9.JVrTE8VIfoOrbuCyn0T7uJa8ypZPelyRPycx_aSkKaCWlvVGmGBcBNT1gxVKosFdU9dUSOIcKxpcz7nozFW1nQ")
                 .body(Mono.just(request), OrderRequest.class)
                 .retrieve()
                 .bodyToMono(BaseResponse.class);

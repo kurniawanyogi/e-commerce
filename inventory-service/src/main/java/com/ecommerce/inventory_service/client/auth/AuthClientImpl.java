@@ -11,7 +11,7 @@ import reactor.core.publisher.Mono;
 @Service
 public class AuthClientImpl implements AuthClient {
     private final WebClient webClient;
-    @Value("${external-service.auth-service-url}")
+    @Value("${external-service.auth-service-url:http://localhost:8889/auth}")
     private String authServiceUrl;
 
     public AuthClientImpl(WebClient.Builder webClientBuilder) {

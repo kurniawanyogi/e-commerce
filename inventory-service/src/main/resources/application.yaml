@@ -13,3 +13,5 @@ spring:
 
 external-service:
   auth-service-url: http://localhost:8889/auth
+server:
+  port: 8080

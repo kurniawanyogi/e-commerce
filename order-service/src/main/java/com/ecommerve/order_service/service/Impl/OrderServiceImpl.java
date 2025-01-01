@@ -1,6 +1,7 @@
 package com.ecommerve.order_service.service.Impl;
 
 import com.ecommerve.order_service.common.exception.MainException;
+import com.ecommerve.order_service.common.kafka.KafkaProducer;
 import com.ecommerve.order_service.common.model.BaseResponse;
 import com.ecommerve.order_service.model.OrderRequest;
 import com.ecommerve.order_service.repository.InventoryRepository;
@@ -15,6 +16,7 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
     private final InventoryRepository inventoryRepository;
+    private final KafkaProducer kafkaProducer;
 
     @Override
     public void orderProduct(long productId, OrderRequest orderRequest, String username) {
@@ -31,6 +33,8 @@ public class OrderServiceImpl implements OrderService {
                 if (responseDeduction != null && !responseDeduction.getCode().equals(HttpStatus.OK.toString())) {
                     throw new MainException("400-VALIDATION", responseDeduction.getDescription());
                 }
+                //TODO set value, message sent to kafka
+                kafkaProducer.sendMessage("orders.order.completed", orderRequest.toString());
             } else {
                 throw new MainException("400-VALIDATION", "quantity product kurang dari quantity order");
             }
