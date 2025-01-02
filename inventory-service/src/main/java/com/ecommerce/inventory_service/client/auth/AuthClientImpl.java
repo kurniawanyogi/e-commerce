@@ -15,13 +15,13 @@ public class AuthClientImpl implements AuthClient {
     private String authServiceUrl;
 
     public AuthClientImpl(WebClient.Builder webClientBuilder) {
-        this.webClient = webClientBuilder.baseUrl(authServiceUrl).build();
+        this.webClient = webClientBuilder.build();
     }
 
     @Override
     public Mono<BaseResponse> authorize(String token, String permissionRole) {
         return webClient.get()
-                .uri("/user/authorize")
+                .uri(authServiceUrl + "/user/authorize")
                 .header(Constant.TOKEN, token)
                 .header(Constant.PERMISSION, permissionRole)
                 .retrieve()
